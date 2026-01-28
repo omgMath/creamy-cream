@@ -1,0 +1,41 @@
+[package]
+name = "ice-cream-optimization"
+version = "0.1.0"
+authors = ["omg_me <2529157-omg_me@users.noreply.gitlab.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dioxus = { version = "0.7.2", features = ["router", "fullstack"] }
+log = "0.4.28"
+serde = { version = "1", features = ["derive"] }
+uuid = { version = "1.19.0", features = ["v4", "js"] }
+sea-orm = "2.0.0-rc.26"
+once_cell = "1"
+tracing = "0.1.41"
+dioxus-logger = "0.7.2"
+reqwest = "0.12.24"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+axum = "0.8.7"
+rusqlite = { version = "0.32.1", features = ["bundled"], optional = true }
+sea-orm = { version = "2.0.0-rc.26", features = [
+    "sqlx-sqlite",
+    "runtime-tokio-rustls",
+    "macros",
+    "entity-registry",
+    "schema-sync",
+] }
+nlopt = "0.8.1"
+
+[features]
+default = ["web"]
+# The feature that are only required for the web = ["dioxus/web"] build target should be optional and only enabled in the web = ["dioxus/web"] feature
+web = ["dioxus/web"]
+# The feature that are only required for the desktop = ["dioxus/desktop"] build target should be optional and only enabled in the desktop = ["dioxus/desktop"] feature
+desktop = ["dioxus/desktop"]
+# The feature that are only required for the mobile = ["dioxus/mobile"] build target should be optional and only enabled in the mobile = ["dioxus/mobile"] feature
+mobile = ["dioxus/mobile"]
+# The feature that are only required for the server = ["dioxus/server"] build target should be optional and only enabled in the server = ["dioxus/server"] feature
+server = ["dioxus/server", "dep:rusqlite"]

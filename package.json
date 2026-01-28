@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "npx": "^10.2.2",
+    "tailwindcss": "^4.1.18"
+  }
+}

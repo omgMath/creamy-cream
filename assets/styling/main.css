@@ -1,0 +1,109 @@
+:root {
+    --color-bg: #0B0F14;
+    --color-surface: #121826;
+    --color-surface-elevated: #1A2234;
+    --color-border: #2A3550;
+
+    --color-text-primary: #E6EDF7;
+    --color-text-secondary: #9AA7BF;
+    --color-text-muted: #6B7690;
+
+    --color-primary: #3B82F6;
+    --color-secondary: #22D3EE;
+    --color-success: #22C55E;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+}
+
+body {
+    margin: 0;
+}
+
+.app-bg {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: Inter, "IBM Plex Sans", "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    min-height: 100vh;
+}
+
+.surface {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+}
+
+.surface-elevated {
+    background-color: var(--color-surface-elevated);
+    color: var(--color-text-primary);
+}
+
+.border-token {
+    border-color: var(--color-border);
+}
+
+.text-primary {
+    color: var(--color-text-primary);
+}
+
+.text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.text-muted {
+    color: var(--color-text-muted);
+}
+
+.btn-primary {
+    @apply bg-blue-500 hover:bg-blue-400 text-black transition duration-150 ease-linear;
+}
+
+.btn-secondary {
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    @apply transition duration-150 ease-linear;
+}
+
+.input-focus {
+    box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.08);
+    border-color: var(--color-secondary);
+}
+
+.nav-link {
+    color: var(--color-text-secondary);
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background-color .12s ease, color .12s ease, transform .12s ease;
+}
+
+.nav-link:hover {
+    background-color: rgba(59, 130, 246, 0.08);
+    color: var(--color-text-primary);
+    transform: translateY(-1px);
+}
+
+.link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+* {
+    transition-duration: 120ms;
+    transition-timing-function: ease-out;
+}
+
+h1 {
+    font-weight: 600;
+}
+
+h2 {
+    font-weight: 500;
+}
+
+.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+}

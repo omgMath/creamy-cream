@@ -1,0 +1,21 @@
+{
+    "image": "rust:1.90-slim-trixie",
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {}
+    },
+    "postCreateCommand": "./.devcontainer/post-create.sh",
+    "appPort": 5150,
+    "forwardPorts": [
+        5150
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dioxuslabs.dioxus",
+                "rust-lang.rust-analyzer",
+                "tamasfe.even-better-toml",
+                "vadimcn.vscode-lldb"
+            ]
+        }
+    }
+}
