@@ -7,8 +7,8 @@ on:
 
 env:
   DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
-  DEPLOY_USER: ${{ vars.DEPLOY_USER }}
-  DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+  DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+  DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
   SERVICE_NAME: ${{ vars.SERVICE_NAME || 'ice-cream-optimization' }}
 
 jobs:
@@ -53,7 +53,7 @@ jobs:
         uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ vars.DEPLOY_HOST }}
-          username: ${{ vars.DEPLOY_USER }}
+          username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           source: deploy.tar.gz
           target: ${{ vars.DEPLOY_PATH }}
@@ -62,7 +62,7 @@ jobs:
         uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ vars.DEPLOY_HOST }}
-          username: ${{ vars.DEPLOY_USER }}
+          username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
             set -e
