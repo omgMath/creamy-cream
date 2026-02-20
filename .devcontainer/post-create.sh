@@ -19,5 +19,7 @@ apt install libwebkit2gtk-4.1-dev \
 rustup toolchain install stable
 rustup component add rustfmt
 rustup target add wasm32-unknown-unknown
+cargo install --locked prek
 cargo install cargo-binstall
 cargo binstall dioxus-cli
+prek install
