@@ -1,0 +1,73 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+  DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+  DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+  SERVICE_NAME: ${{ vars.SERVICE_NAME || 'ice-cream-optimization' }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache Cargo registry & build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install Dioxus CLI
+        run: cargo install dioxus-cli --locked
+
+      - name: Build release
+        run: dx build --release
+
+      - name: Prepare deployment archive
+        run: |
+          BUILD_DIR="target/dx/ice-cream-optimization/release/web"
+          tar czf deploy.tar.gz \
+            -C "$BUILD_DIR" \
+            ice-cream-optimization \
+            public/
+
+      - name: Copy archive to server
+        uses: appleboy/scp-action@v0.1.9
+        with:
+          host: ${{ vars.DEPLOY_HOST }}
+          username: ${{ vars.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: deploy.tar.gz
+          target: ${{ vars.DEPLOY_PATH }}
+
+      - name: Extract and restart service
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ vars.DEPLOY_HOST }}
+          username: ${{ vars.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -e
+            cd ${{ vars.DEPLOY_PATH }}
+            tar xzf deploy.tar.gz
+            rm deploy.tar.gz
+            sudo systemctl restart ${{ vars.SERVICE_NAME || 'ice-cream-optimization' }}
+            sudo systemctl reload nginx
