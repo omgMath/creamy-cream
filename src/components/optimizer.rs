@@ -199,7 +199,7 @@ pub fn Optimizer() -> Element {
                                         ingredient_constraints.write()[index].max = Some(*min);
                                     },
                                 }
-                            
+
                             }
                         }
                     }

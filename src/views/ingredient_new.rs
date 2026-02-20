@@ -114,7 +114,7 @@ pub fn IngredientCreate() -> Element {
                     }
                 }
             }
-        
+
         }
     }
 }
