@@ -1,10 +1,16 @@
 use crate::api::models::IngredientForm;
-use crate::entity::property::PropertyType;
-use crate::entity::{db, ingredient, property};
+use crate::entity::ingredient;
 use dioxus::prelude::*;
-use sea_orm::EntityTrait;
-use sea_orm::QueryOrder;
-use sea_orm::{ActiveModelTrait, DatabaseConnection, Set};
+
+#[cfg(not(target_arch = "wasm32"))]
+use {
+    crate::entity::property::PropertyType,
+    crate::entity::{db, property},
+    dioxus_logger::tracing::info,
+    sea_orm::EntityTrait,
+    sea_orm::QueryOrder,
+    sea_orm::{ActiveModelTrait, DatabaseConnection, Set},
+};
 
 #[get("/api/ingredients")]
 pub async fn get_ingredients() -> Result<Vec<ingredient::Model>> {
@@ -25,49 +31,33 @@ pub async fn create_ingredient(form: IngredientForm) -> Result<String> {
         ..Default::default()
     };
     let new_ingredient = i.insert(connection).await?;
-    let ingredient_id = new_ingredient.id.clone();
-    _link_property(
-        connection.clone(),
-        ingredient_id.clone(),
-        PropertyType::Fat,
-        form.fat,
-    )
-    .await;
-    _link_property(
-        connection.clone(),
-        ingredient_id.clone(),
-        PropertyType::Sugar,
-        form.sugar,
-    )
-    .await;
-    _link_property(
-        connection.clone(),
-        ingredient_id.clone(),
-        PropertyType::Water,
-        form.water,
-    )
-    .await;
-    _link_property(
-        connection.clone(),
-        ingredient_id.clone(),
+    let ingredient_id = new_ingredient.id;
+    link_property(connection, ingredient_id, PropertyType::Fat, form.fat).await?;
+    link_property(connection, ingredient_id, PropertyType::Sugar, form.sugar).await?;
+    link_property(connection, ingredient_id, PropertyType::Water, form.water).await?;
+    link_property(
+        connection,
+        ingredient_id,
         PropertyType::Density,
         form.density,
     )
-    .await;
+    .await?;
     Ok("Ingredient created".to_string())
 }
 
-async fn _link_property(
-    connection: DatabaseConnection,
+#[cfg(not(target_arch = "wasm32"))]
+async fn link_property(
+    connection: &DatabaseConnection,
     ingredient_id: i32,
     property: PropertyType,
     value: f64,
-) {
-    let nutrient: property::ActiveModel = property::ActiveModel {
+) -> std::result::Result<(), sea_orm::DbErr> {
+    let nutrient = property::ActiveModel {
         ingredient_id: Set(ingredient_id),
         property: Set(property),
         value: Set(value),
         ..Default::default()
     };
-    let _ = nutrient.insert(&connection).await;
+    nutrient.insert(connection).await?;
+    Ok(())
 }

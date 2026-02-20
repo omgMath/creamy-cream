@@ -1,13 +1,16 @@
+#[cfg(not(target_arch = "wasm32"))]
 use once_cell::sync::OnceCell;
+#[cfg(not(target_arch = "wasm32"))]
 use sea_orm::{Database, DatabaseConnection, DbErr};
-use tracing;
 
 #[cfg(not(target_arch = "wasm32"))]
 static DB: OnceCell<DatabaseConnection> = OnceCell::new();
 
 #[cfg(not(target_arch = "wasm32"))]
 pub async fn create_connection() -> Result<&'static DatabaseConnection, DbErr> {
-    // only executed the first time
+    if let Some(conn) = DB.get() {
+        return Ok(conn);
+    }
 
     use crate::entity::{ingredient, property};
     let conn = Database::connect("sqlite://db-dev.sqlite?mode=rwc").await?;

@@ -27,7 +27,7 @@ pub fn BarChart(
     }
 }
 
-fn bars(data: &Vec<BarData>, custom_class: String, color_shade: String) -> Element {
+fn bars(data: &[BarData], custom_class: String, color_shade: String) -> Element {
     rsx! {
         div { class: "{custom_class} w-full absolute left-0 flex",
             for (i , item) in data.iter().enumerate() {
@@ -42,7 +42,7 @@ fn bars(data: &Vec<BarData>, custom_class: String, color_shade: String) -> Eleme
     }
 }
 
-fn legend(label: String, data: &Vec<BarData>, color_shade: String) -> Element {
+fn legend(label: String, data: &[BarData], color_shade: String) -> Element {
     rsx! {
         div { class: "text-xs",
             span {

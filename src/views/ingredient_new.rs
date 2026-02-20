@@ -43,7 +43,7 @@ pub fn IngredientCreate() -> Element {
 
     rsx! {
         div { class: "mx-auto max-w-2xl px-6 py-8 bg-surface-elevated rounded-lg",
-            if feedback().len() > 0 {
+            if !feedback().is_empty() {
                 p { class: "border rounded border-success px-2 py-1 mb-4 text-sm",
                     "{feedback}"
                 }
@@ -60,7 +60,7 @@ pub fn IngredientCreate() -> Element {
                         name: "Name",
                         required: true,
                         value: name,
-                        oninput: move |e| name.set(e.parsed().expect("Parsing failed")),
+                        oninput: move |e| name.set(e.parsed().unwrap_or_default()),
                     }
                 }
                 // Fat / Sugar / Water (percent inputs)
@@ -81,7 +81,7 @@ pub fn IngredientCreate() -> Element {
                             max: "100",
                             step: "0.01",
                             value: refe(),
-                            oninput: move |e| refe.set(e.parsed().expect("Parsing failed")),
+                            oninput: move |e| refe.set(e.parsed().unwrap_or_default()),
                         }
                     }
                 }

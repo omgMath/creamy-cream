@@ -3,7 +3,6 @@ use crate::api::calculate::calculate;
 use crate::api::ingredient::get_ingredients;
 use crate::api::models::{IngredientConstraint, Nutrients, DEFAULT_TARGET_RATIO};
 use dioxus::prelude::*;
-use dioxus_logger::tracing::info;
 use std::collections::HashSet;
 
 const NUMBER_OF_INGREDIENTS_DISPLAYED: usize = 5;
@@ -69,14 +68,14 @@ pub fn Optimizer() -> Element {
         }
     });
     let calculation_result = use_resource(move || async move {
-        if ingredient_constraints.len() > 0 {
+        if !ingredient_constraints.is_empty() {
             calculate(
                 ingredient_constraints()
                     .iter()
                     .map(|c| IngredientConstraint {
                         id: c.id,
-                        min: c.min.is_some().then(|| c.min.unwrap() / target_amount_g()),
-                        max: c.max.is_some().then(|| c.max.unwrap() / target_amount_g()),
+                        min: c.min.map(|v| v / target_amount_g()),
+                        max: c.max.map(|v| v / target_amount_g()),
                     })
                     .collect(),
                 if target_amount_g() != 1.0 {
@@ -92,10 +91,6 @@ pub fn Optimizer() -> Element {
         }
     });
 
-    info!(
-        "Ingredient IDs for optimization: {:?}",
-        ingredient_ids_for_optimization()
-    );
     let ingredients_class = "flex flex-wrap space-x-2 space-y-2";
     let buttons_class = "button-primary rounded-full inline h-9 min-w-max";
     rsx! {
@@ -110,7 +105,7 @@ pub fn Optimizer() -> Element {
                         search_term.set(event.value());
                     },
                 }
-                if filtered_ingredients().len() > 0 {
+                if !filtered_ingredients().is_empty() {
                     div { class: ingredients_class,
                         for ingredient in filtered_ingredients().into_iter().take(NUMBER_OF_INGREDIENTS_DISPLAYED) {
                             button {
@@ -149,7 +144,7 @@ pub fn Optimizer() -> Element {
                         target_amount_g.set(event.value().parse().unwrap_or(1.0));
                     },
                 }
-                if ingredient_constraints.len() > 0 {
+                if !ingredient_constraints.is_empty() {
                     div { class: ingredients_class,
                         for (index , constraint) in ingredient_constraints.iter().enumerate() {
                             div { class: "flex space-x-2 items-center",
