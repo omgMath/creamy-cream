@@ -50,7 +50,7 @@ jobs:
             public/
 
       - name: Copy archive to server
-        uses: appleboy/scp-action@v0.1.9
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ vars.DEPLOY_HOST }}
           username: ${{ vars.DEPLOY_USER }}
@@ -59,7 +59,7 @@ jobs:
           target: ${{ vars.DEPLOY_PATH }}
 
       - name: Extract and restart service
-        uses: appleboy/ssh-action@v1.2.2
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ vars.DEPLOY_HOST }}
           username: ${{ vars.DEPLOY_USER }}
