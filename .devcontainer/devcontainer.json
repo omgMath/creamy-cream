@@ -3,6 +3,9 @@
     "features": {
         "ghcr.io/devcontainers/features/git:1": {}
     },
+    "mounts": [
+        "source=${env:HOME}${env:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+    ],
     "postCreateCommand": "./.devcontainer/post-create.sh",
     "appPort": 5150,
     "forwardPorts": [
