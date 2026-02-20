@@ -19,7 +19,6 @@ reqwest = "0.13.2"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 axum = "0.8.8"
-rusqlite = { version = "0.38.0", features = ["bundled"], optional = true }
 sea-orm = { version = "2.0.0-rc.32", features = [
     "sqlx-sqlite",
     "runtime-tokio-rustls",
@@ -38,4 +37,4 @@ desktop = ["dioxus/desktop"]
 # The feature that are only required for the mobile = ["dioxus/mobile"] build target should be optional and only enabled in the mobile = ["dioxus/mobile"] feature
 mobile = ["dioxus/mobile"]
 # The feature that are only required for the server = ["dioxus/server"] build target should be optional and only enabled in the server = ["dioxus/server"] feature
-server = ["dioxus/server", "dep:rusqlite"]
+server = ["dioxus/server"]

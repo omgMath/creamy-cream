@@ -1,5 +1,5 @@
 {
-    "image": "rust:1.90-slim-trixie",
+    "image": "rust:1.90-trixie",
     "features": {
         "ghcr.io/devcontainers/features/git:1": {}
     },
