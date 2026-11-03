@@ -8,14 +8,14 @@ pub fn IngredientCreate() -> Element {
     let mut fat = use_signal(|| 0.0);
     let mut sugar = use_signal(|| 0.0);
     let mut water = use_signal(|| 0.0);
-    let mut density = use_signal(|| 0.0);
+    let mut density = use_signal(|| 1000.0);
     let mut feedback = use_signal(String::new);
     let mut reset = move || {
         name.set(String::new());
         fat.set(0.0);
         sugar.set(0.0);
         water.set(0.0);
-        density.set(0.0);
+        density.set(1000.0);
     };
     let onsubmit = move |evt: FormEvent| async move {
         evt.prevent_default();
@@ -26,6 +26,9 @@ pub fn IngredientCreate() -> Element {
             water: water(),
             density: density(),
         };
+        if values.name.trim().is_empty() || values.density == 0.0 {
+            feedback.set("❌ Ingredient must have a name and a density".to_string());
+        }
         match create_ingredient(values).await {
             Ok(_) => {
                 let created_name = name().clone();

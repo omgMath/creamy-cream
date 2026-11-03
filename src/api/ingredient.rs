@@ -25,6 +25,9 @@ pub async fn get_ingredients() -> Result<Vec<ingredient::Model>> {
 #[post("/api/ingredients")]
 pub async fn create_ingredient(form: IngredientForm) -> Result<String> {
     info!("Creating ingredient: {:?}", form);
+    if form.name.trim().is_empty() || form.density == 0.0 {
+        panic!("Ingredient must have name and density");
+    }
     let connection = db::create_connection().await?;
     let i = ingredient::ActiveModel {
         name: Set(form.name),
@@ -39,7 +42,11 @@ pub async fn create_ingredient(form: IngredientForm) -> Result<String> {
         connection,
         ingredient_id,
         PropertyType::Density,
-        form.density,
+        if form.density > 0.0 {
+            form.density
+        } else {
+            1000.0
+        },
     )
     .await?;
     Ok("Ingredient created".to_string())
