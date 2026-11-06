@@ -46,8 +46,7 @@ jobs:
           BUILD_DIR="target/dx/ice-cream-optimization/release/web"
           tar czf deploy.tar.gz \
             -C "$BUILD_DIR" \
-            ice-cream-optimization \
-            public/
+            public/ .manifest.json server
 
       - name: Copy archive to server
         uses: appleboy/scp-action@v1.0.0
